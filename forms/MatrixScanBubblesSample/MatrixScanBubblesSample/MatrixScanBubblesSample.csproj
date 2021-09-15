@@ -24,6 +24,9 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Secrets\Secrets.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Update="Views\StockOverlay.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

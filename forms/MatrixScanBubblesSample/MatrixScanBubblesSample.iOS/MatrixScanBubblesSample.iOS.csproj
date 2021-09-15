@@ -47,11 +47,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>Apple Development: Michael Conrad %28Z8YH6VL97U%29</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>None</MtouchLink>
     <MtouchInterpreter>-all</MtouchInterpreter>
+    <CodesignProvision>VS: WildCard Development</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -63,6 +64,9 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>SdkOnly</MtouchLink>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -106,12 +110,24 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\freeze_disabled.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\freeze_disabled.imageset\freeze_disabled.png" />
-    <ImageAsset Include="Assets.xcassets\freeze_enabled.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\freeze_enabled.imageset\freeze_enabled.png" />
-    <ImageAsset Include="Assets.xcassets\stock_count.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\stock_count.imageset\stock_count.png" />
+    <ImageAsset Include="Assets.xcassets\freeze_disabled.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\freeze_disabled.imageset\freeze_disabled.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\freeze_enabled.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\freeze_enabled.imageset\freeze_enabled.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\stock_count.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\stock_count.imageset\stock_count.png">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -126,6 +142,10 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Secrets\Secrets.csproj">
+      <Project>{d8939739-ab0e-49d1-9ed3-efdca1ead8ea}</Project>
+      <Name>Secrets</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MatrixScanBubblesSample\MatrixScanBubblesSample.csproj">
       <Project>{827A6BE7-A629-4FEA-BFBB-5F29FC0E0DA8}</Project>
       <Name>MatrixScanBubblesSample</Name>
