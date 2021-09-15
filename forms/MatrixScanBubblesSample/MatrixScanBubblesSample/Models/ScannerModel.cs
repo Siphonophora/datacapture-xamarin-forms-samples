@@ -52,7 +52,6 @@ namespace MatrixScanBubblesSample.Models
             };
 
             this.BarcodeTrackingSettings.EnableSymbologies(symbologies);
-            SymbologySettings symbologySettings = BarcodeTrackingSettings.GetSymbologySettings(Symbology.Code128);
 
             this.BarcodeTracking = BarcodeTracking.Create(this.DataCaptureContext, this.BarcodeTrackingSettings);
         }

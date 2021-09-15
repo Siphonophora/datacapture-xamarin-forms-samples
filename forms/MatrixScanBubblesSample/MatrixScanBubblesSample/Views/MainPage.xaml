@@ -11,11 +11,11 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <AbsoluteLayout>
-            <scanditCore:DataCaptureView 
+            <scanditCore:DataCaptureView
                 AbsoluteLayout.LayoutBounds="0,0,1,1"
                 AbsoluteLayout.LayoutFlags="All"
                 x:Name="DataCaptureView"
-                DataCaptureContext="{Binding DataCaptureContext}" >
+                DataCaptureContext="{Binding DataCaptureContext}">
                 <!-- Add a barcode tracking basic overlay to the data capture view to render the tracked barcodes on top of the video
                      preview. This is optional, but recommended for better visual feedback. -->
                 <scanditBarcode:BarcodeTrackingBasicOverlay
@@ -24,15 +24,15 @@
                 <scanditBarcode:BarcodeTrackingAdvancedOverlay
                     BarcodeTracking="{Binding BarcodeTracking}" Listener="{Binding .}" />
             </scanditCore:DataCaptureView>
-            <ImageButton 
+            <ImageButton
                 AbsoluteLayout.LayoutBounds="0,0.9,1,0.1"
                 AbsoluteLayout.LayoutFlags="All"
-                Source="freeze_enabled.png" 
+                Source="freeze_enabled.png"
                 HorizontalOptions="Center"
                 WidthRequest="111"
-                BackgroundColor="Transparent" 
+                BackgroundColor="Transparent"
                 Command="{Binding ToggleFreezeButton}"
-                Clicked="FreezeButtonClicked"/>
+                Clicked="FreezeButtonClicked" />
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

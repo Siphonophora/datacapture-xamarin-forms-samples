@@ -34,22 +34,18 @@ namespace MatrixScanBubblesSample.ViewModels
 {
     public class MainPageViewModel : IBarcodeTrackingListener, IBarcodeTrackingBasicOverlayListener, IBarcodeTrackingAdvancedOverlayListener
     {
+        public Func<TrackedBarcode, bool> ShouldHideOverlay;
         private readonly Scandit.DataCapture.Core.UI.Style.Unified.Brush highlightedBrush;
         private readonly IDictionary<int, View> overlays = new Dictionary<int, View>();
         private readonly int shelfCount = 4;
         private readonly int backRoom = 8;
-
-        public Camera Camera { get; private set; } = ScannerModel.Instance.CurrentCamera;
-        public DataCaptureContext DataCaptureContext { get; private set; } = ScannerModel.Instance.DataCaptureContext;
-        public BarcodeTracking BarcodeTracking { get; private set; } = ScannerModel.Instance.BarcodeTracking;
-        public Func<TrackedBarcode, bool> ShouldHideOverlay;
 
         public MainPageViewModel()
         {
             this.InitializeScanner();
             this.SubscribeToAppMessages();
 
-            this.highlightedBrush = new Scandit.DataCapture.Core.UI.Style.Unified.Brush(Color.Transparent, Color.White, 2.0f);
+            this.highlightedBrush = new Scandit.DataCapture.Core.UI.Style.Unified.Brush(Color.AliceBlue, Color.White, 2.0f);
             this.ToggleFreezeButton = new Command(() =>
             {
                 if (this.BarcodeTracking.Enabled)
@@ -64,6 +60,14 @@ namespace MatrixScanBubblesSample.ViewModels
                 }
             });
         }
+
+        public Camera Camera { get; private set; } = ScannerModel.Instance.CurrentCamera;
+
+        public DataCaptureContext DataCaptureContext { get; private set; } = ScannerModel.Instance.DataCaptureContext;
+
+        public BarcodeTracking BarcodeTracking { get; private set; } = ScannerModel.Instance.BarcodeTracking;
+
+        public ICommand ToggleFreezeButton { get; private set; }
 
         public Task OnSleep()
         {
@@ -88,8 +92,6 @@ namespace MatrixScanBubblesSample.ViewModels
             }
         }
 
-        public ICommand ToggleFreezeButton { get; private set; }
-
         private void SubscribeToAppMessages()
         {
             MessagingCenter.Subscribe(this, App.MessageKeys.OnResume, callback: async (App app) => await this.OnResumeAsync());
@@ -104,12 +106,13 @@ namespace MatrixScanBubblesSample.ViewModels
 
         private Task ResumeFrameSource()
         {
-            // Switch camera on to start streaming frames.
-            // The camera is started asynchronously and will take some time to completely turn on.
+            // Switch camera on to start streaming frames. The camera is started asynchronously and
+            // will take some time to completely turn on.
             return this.Camera?.SwitchToDesiredStateAsync(FrameSourceState.On);
         }
 
         #region IBarcodeTrackingListener
+
         public void OnObservationStarted(BarcodeTracking barcodeTracking)
         { }
 
@@ -118,7 +121,8 @@ namespace MatrixScanBubblesSample.ViewModels
 
         public void OnSessionUpdated(BarcodeTracking barcodeTracking, BarcodeTrackingSession session, IFrameData frameData)
         {
-            // This method is called whenever objects are updated and it's the right place to react to the tracking results.
+            // This method is called whenever objects are updated and it's the right place to react
+            // to the tracking results.
             Device.InvokeOnMainThreadAsync(() =>
             {
                 if (!this.BarcodeTracking.Enabled)
@@ -136,14 +140,16 @@ namespace MatrixScanBubblesSample.ViewModels
                 {
                     if (this.overlays.TryGetValue(trackedCode.Identifier, out View stockOverlay))
                     {
-                        stockOverlay.IsVisible = !this.ShouldHideOverlay?.Invoke(trackedCode) ?? true;
-                    }                    
+                        stockOverlay.IsVisible = true; // TODO SHOW ALL FOR NOW !this.ShouldHideOverlay?.Invoke(trackedCode) ?? true;
+                    }
                 }
             });
         }
-        #endregion
+
+        #endregion IBarcodeTrackingListener
 
         #region IBarcodeTrackingBasicOverlayListener
+
         public Scandit.DataCapture.Core.UI.Style.Unified.Brush BrushForTrackedBarcode(BarcodeTrackingBasicOverlay overlay, TrackedBarcode trackedBarcode)
         {
             return this.highlightedBrush;
@@ -151,9 +157,11 @@ namespace MatrixScanBubblesSample.ViewModels
 
         public void OnTrackedBarcodeTapped(BarcodeTrackingBasicOverlay overlay, TrackedBarcode trackedBarcode)
         { }
-        #endregion
+
+        #endregion IBarcodeTrackingBasicOverlayListener
 
         #region IBarcodeTrackingAdvancedOverlay
+
         public View ViewForTrackedBarcode(BarcodeTrackingAdvancedOverlay overlay, TrackedBarcode trackedBarcode)
         {
             var identifier = trackedBarcode.Identifier;
@@ -161,7 +169,7 @@ namespace MatrixScanBubblesSample.ViewModels
             if (!this.overlays.TryGetValue(identifier, out var stockOverlay))
             {
                 // Get the information you want to show from your back end system/database.
-                stockOverlay = new StockOverlay(trackedBarcode.Barcode.Data, this.shelfCount, this.backRoom);
+                stockOverlay = new SlidePickingOverlay();
                 this.overlays[identifier] = stockOverlay;
             }
 
@@ -172,17 +180,18 @@ namespace MatrixScanBubblesSample.ViewModels
         public Anchor AnchorForTrackedBarcode(BarcodeTrackingAdvancedOverlay overlay, TrackedBarcode trackedBarcode)
         {
             // The offset of our overlay will be calculated from the top center anchoring point.
-            return Anchor.TopCenter;
+            return Anchor.Center;
         }
 
         public PointWithUnit OffsetForTrackedBarcode(BarcodeTrackingAdvancedOverlay overlay, TrackedBarcode trackedBarcode)
         {
-            // We set the offset's height to be equal of the 100 percent of our overlay.
-            // The minus sign means that the overlay will be above the barcode.
+            // We set the offset's height to be equal of the 100 percent of our overlay. The minus
+            // sign means that the overlay will be above the barcode.
             return new PointWithUnit(
                 x: new FloatWithUnit(value: 0, unit: MeasureUnit.Fraction),
-                y: new FloatWithUnit(value: -1, unit: MeasureUnit.Fraction));
+                y: new FloatWithUnit(value: 0, unit: MeasureUnit.Fraction));
         }
-        #endregion
+
+        #endregion IBarcodeTrackingAdvancedOverlay
     }
 }

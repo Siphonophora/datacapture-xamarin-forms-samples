@@ -27,6 +27,9 @@
     <ProjectReference Include="..\..\..\Secrets\Secrets.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Views\SlidePickingOverlay.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\StockOverlay.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
