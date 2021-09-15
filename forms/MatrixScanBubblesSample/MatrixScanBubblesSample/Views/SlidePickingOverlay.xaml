@@ -4,7 +4,7 @@
              x:Class="MatrixScanBubblesSample.Views.SlidePickingOverlay">
     <ContentView.Content>
         <StackLayout BackgroundColor="LightGreen">
-            <Label Text="4⬆" />
+            <Label x:Name="Label" HorizontalOptions="Center" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>

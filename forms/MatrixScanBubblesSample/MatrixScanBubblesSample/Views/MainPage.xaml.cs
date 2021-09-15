@@ -22,7 +22,7 @@ namespace MatrixScanBubblesSample.Views
 {
     public partial class MainPage : ContentPage
     {
-        private readonly float barcodeToScreenTresholdRatio = 0.1f;
+        private readonly float barcodeToScreenTresholdRatio = 0.02f;
         private readonly MainPageViewModel viewModel;
         private bool freezeEnabled = true;
 
@@ -38,8 +38,8 @@ namespace MatrixScanBubblesSample.Views
                     return Math.Max(barcodeLocation.BottomRight.X - barcodeLocation.BottomLeft.X, barcodeLocation.TopRight.X - barcodeLocation.TopLeft.X);
                 }
 
-                // If the barcode is wider than the desired percent of the data capture view's width,
-                // show it to the user.
+                // If the barcode is wider than the desired percent of the data capture view's
+                // width, show it to the user.
                 var width = GetWidth(this.DataCaptureView.MapFrameQuadrilateralToView(trackedBarcode.Location));
                 return (width / this.DataCaptureView.Width) <= this.barcodeToScreenTresholdRatio;
             };

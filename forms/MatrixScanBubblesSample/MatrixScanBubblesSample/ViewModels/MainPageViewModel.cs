@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using MatrixScanBubblesSample.Models;
+using MatrixScanBubblesSample.Services;
 using MatrixScanBubblesSample.Views;
 using Scandit.DataCapture.Barcode.Tracking.Capture.Unified;
 using Scandit.DataCapture.Barcode.Tracking.Data.Unified;
@@ -39,9 +40,11 @@ namespace MatrixScanBubblesSample.ViewModels
         private readonly IDictionary<int, View> overlays = new Dictionary<int, View>();
         private readonly int shelfCount = 4;
         private readonly int backRoom = 8;
+        private readonly SlideRepository repository;
 
         public MainPageViewModel()
         {
+            repository = new SlideRepository();
             this.InitializeScanner();
             this.SubscribeToAppMessages();
 
@@ -140,7 +143,7 @@ namespace MatrixScanBubblesSample.ViewModels
                 {
                     if (this.overlays.TryGetValue(trackedCode.Identifier, out View stockOverlay))
                     {
-                        stockOverlay.IsVisible = true; // TODO SHOW ALL FOR NOW !this.ShouldHideOverlay?.Invoke(trackedCode) ?? true;
+                        stockOverlay.IsVisible = !this.ShouldHideOverlay?.Invoke(trackedCode) ?? true;
                     }
                 }
             });
@@ -165,15 +168,15 @@ namespace MatrixScanBubblesSample.ViewModels
         public View ViewForTrackedBarcode(BarcodeTrackingAdvancedOverlay overlay, TrackedBarcode trackedBarcode)
         {
             var identifier = trackedBarcode.Identifier;
-
-            if (!this.overlays.TryGetValue(identifier, out var stockOverlay))
+            var barcode = trackedBarcode.Barcode.Data ?? "ERROR";
+            if (!this.overlays.TryGetValue(identifier, out var stockOverlay) && repository.IsSlide(barcode))
             {
                 // Get the information you want to show from your back end system/database.
-                stockOverlay = new SlidePickingOverlay();
+                stockOverlay = new SlidePickingOverlay(repository.GetLocationOffset(barcode));
                 this.overlays[identifier] = stockOverlay;
+                stockOverlay.IsVisible = !this.ShouldHideOverlay?.Invoke(trackedBarcode) ?? true;
             }
 
-            stockOverlay.IsVisible = !this.ShouldHideOverlay?.Invoke(trackedBarcode) ?? true;
             return stockOverlay;
         }
 
