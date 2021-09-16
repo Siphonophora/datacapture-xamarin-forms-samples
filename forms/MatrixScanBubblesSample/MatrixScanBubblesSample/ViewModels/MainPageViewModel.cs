@@ -48,7 +48,7 @@ namespace MatrixScanBubblesSample.ViewModels
             this.InitializeScanner();
             this.SubscribeToAppMessages();
 
-            this.highlightedBrush = new Scandit.DataCapture.Core.UI.Style.Unified.Brush(Color.AliceBlue, Color.White, 2.0f);
+            this.highlightedBrush = new Scandit.DataCapture.Core.UI.Style.Unified.Brush(Color.Transparent, Color.Green, 2.0f);
             this.ToggleFreezeButton = new Command(() =>
             {
                 if (this.BarcodeTracking.Enabled)
@@ -169,14 +169,22 @@ namespace MatrixScanBubblesSample.ViewModels
         {
             var identifier = trackedBarcode.Identifier;
             var barcode = trackedBarcode.Barcode.Data ?? "ERROR";
-            if (!this.overlays.TryGetValue(identifier, out var stockOverlay) && repository.IsSlide(barcode))
+            if (!this.overlays.TryGetValue(identifier, out var stockOverlay))
             {
-                // Get the information you want to show from your back end system/database.
-                stockOverlay = new SlidePickingOverlay(repository.GetLocationOffset(barcode));
-                this.overlays[identifier] = stockOverlay;
-                stockOverlay.IsVisible = !this.ShouldHideOverlay?.Invoke(trackedBarcode) ?? true;
+                if (repository.IsSlide(barcode))
+                {
+                    // Get the information you want to show from your back end system/database.
+                    stockOverlay = new SlidePickingOverlay(barcode, repository.GetPullInfoInChit(barcode), () => repository.PullSlide(barcode));
+                    this.overlays[identifier] = stockOverlay;
+                    stockOverlay.IsVisible = !this.ShouldHideOverlay?.Invoke(trackedBarcode) ?? true;
+                }
+                else if (repository.IsChit(barcode))
+                {
+                    stockOverlay = new ChitOverlay(repository.GetChitPullCount(barcode));
+                    this.overlays[identifier] = stockOverlay;
+                    stockOverlay.IsVisible = true; // !this.ShouldHideOverlay?.Invoke(trackedBarcode) ?? true;
+                }
             }
-
             return stockOverlay;
         }
 

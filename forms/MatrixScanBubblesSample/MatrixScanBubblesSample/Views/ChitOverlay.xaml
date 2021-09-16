@@ -1,13 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MatrixScanBubblesSample.Views.SlidePickingOverlay">
+             x:Class="MatrixScanBubblesSample.Views.ChitOverlay">
     <ContentView.Content>
-        <StackLayout BackgroundColor="LightGreen">
-            <StackLayout.GestureRecognizers>
-                <TapGestureRecognizer Tapped="TapGestureRecognizerTapped" />
-            </StackLayout.GestureRecognizers>
-            <Label x:Name="Label"
+        <StackLayout x:Name="StackLayout">
+            <Label x:Name="Label" FontSize="Large"
                    HorizontalOptions="CenterAndExpand"
                    VerticalOptions="CenterAndExpand" />
         </StackLayout>

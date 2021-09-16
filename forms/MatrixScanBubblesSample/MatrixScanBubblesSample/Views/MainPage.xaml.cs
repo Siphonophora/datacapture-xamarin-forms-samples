@@ -22,7 +22,7 @@ namespace MatrixScanBubblesSample.Views
 {
     public partial class MainPage : ContentPage
     {
-        private readonly float barcodeToScreenTresholdRatio = 0.02f;
+        private readonly float barcodeToScreenTresholdRatio = 0.001f;
         private readonly MainPageViewModel viewModel;
         private bool freezeEnabled = true;
 
